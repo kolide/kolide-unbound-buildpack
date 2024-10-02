@@ -39,6 +39,8 @@ $BUILD_DIR/.apt/usr/sbin/unbound-control-setup -d $UNBOUND_CONF_DIR
 echo -e "    control-enable: yes" >> $CONF_FILE
 echo -e "    control-key-file: $UNBOUND_CONF_DIR/unbound_control.key" >> $CONF_FILE
 echo -e "    control-cert-file: $UNBOUND_CONF_DIR/unbound_control.pem" >> $CONF_FILE
+cat $CONF_FILE | indent
+$BUILD_DIR/.apt/usr/sbin/unbound-checkconf $CONF_FILE | indent
 
 # TODO RM: skip if UNBOUND_JSON_FILE is empty
 topic "Adding forward list from UNBOUND_JSON config variable"
