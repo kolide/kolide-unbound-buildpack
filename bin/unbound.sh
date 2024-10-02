@@ -4,7 +4,7 @@
 PRIVATE_SPACE_DNS_SERVERS=$(grep '^nameserver' /etc/resolv.conf | cut -d' ' -f2)
 
 # Default to using these DNS servers in unbound
-/usr/local/sbin/unbound-control forward_add "*" $PRIVATE_SPACE_DNS_SERVERS
+/app/.apt/usr/sbin/unbound-control forward_add "*" $PRIVATE_SPACE_DNS_SERVERS
 
 # Update /etc/resolv.conf to use unbound instead of the Private Space DNS
 awk '!/nameserver/' /etc/resolv.conf > /etc/resolv.conf.new
@@ -13,4 +13,4 @@ mv /etc/resolv.conf /etc/resolv.conf.bak
 mv /etc/resolv.conf.new /etc/resolv.conf
 
 # Start unbound
-/usr/local/sbin/unbound -c /etc/unbound/unbound.conf
+/app/.apt/usr/sbin/unbound -c /app/.apt/etc/unbound/unbound.conf

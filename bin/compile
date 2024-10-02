@@ -27,12 +27,10 @@ function indent() {
 
 # Perform compile steps
 topic "Confirming unbound is already installed"
-ls /etc/unbound
-ls /usr/local
-/usr/local/sbin/unbound -V | indent
+$BUILD_DIR/.apt/usr/sbin/unbound -V | indent
 
 topic "Creating unbound config"
-cp $CONF_DIR/unbound.conf /etc/unbound/
+cp $CONF_DIR/unbound.conf $BUILD_DIR/.apt/etc/unbound/
 
 # TODO RM: skip if UNBOUND_JSON_FILE is empty
 topic "Adding forward list from UNBOUND_JSON config variable"
