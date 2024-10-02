@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+# Fail fast
+set -o pipefail
+set -eu
+
+# Arguments
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
+BIN_DIR=$(dirname "$0")
+CONF_DIR=$(cd "$BIN_DIR"; cd ../conf; pwd)
+UNBOUND_JSON_FILE=$CONF_DIR/UNBOUND_JSON
+
+# Expected formatting for buildpack output
+function topic() {
+  echo "-----> $*"
+}
+
+function indent() {
+  c='s/^/       /'
+  case $(uname) in
+    Darwin) sed -l "$c";;
+    *)      sed -u "$c";;
+  esac
+}
+
+# Perform compile steps
+topic "Installing unbound"
+apt-get update | indent
+apt-get -y --force-yes -d install --reinstall --no-install-recommends unbound | indent
+unbound -V | indent
+
+topic "Creating unbound config"
+cp $CONF_DIR/unbound.conf /etc/unbound/
+
+# TODO RM: skip if UNBOUND_JSON_FILE is empty
+topic "Adding forward list from UNBOUND_JSON config variable"
+readarray -t forward_add_arg_list < <(jq -r '.forward[] | "\(.zone) \(.addrs | join (" "))"' $UNBOUND_JSON_FILE)
+for forward_add_args in "${forward_add_arg_list[@]}"; do
+    /usr/local/sbin/unbound-control forward_add "$forward_add_args"
+done
+
+topic "Configuring unbound to run as daemon"
+mkdir -p $BUILD_DIR/.profile.d
+cp "$BIN_DIR/unbound.sh" "$BUILD_DIR/.profile.d/"
+chmod +x "$BUILD_DIR/.profile.d/unbound.sh"
+
+topic "Done"
+exit 0
