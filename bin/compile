@@ -36,6 +36,7 @@ CONF_FILE=$UNBOUND_CONF_DIR/unbound.conf
 
 topic "Set up unbound-control"
 $BUILD_DIR/.apt/usr/sbin/unbound-control-setup -d $UNBOUND_CONF_DIR
+echo -e "remote-control:" >> $CONF_FILE
 echo -e "    control-enable: yes" >> $CONF_FILE
 echo -e "    control-key-file: $UNBOUND_CONF_DIR/unbound_control.key" >> $CONF_FILE
 echo -e "    control-cert-file: $UNBOUND_CONF_DIR/unbound_control.pem" >> $CONF_FILE
@@ -51,6 +52,7 @@ done
 
 topic "Confirm config file"
 cat $CONF_FILE | indent
+$BUILD_DIR/.apt/usr/sbin/unbound-checkconf $CONF_FILE | indent
 
 topic "Configuring unbound to run as daemon"
 mkdir -p $BUILD_DIR/.profile.d
