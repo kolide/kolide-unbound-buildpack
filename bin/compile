@@ -34,6 +34,7 @@ UNBOUND_CONF_DIR=$BUILD_DIR/.apt/etc/unbound
 cp $CONF_DIR/unbound.conf $UNBOUND_CONF_DIR/
 CONF_FILE=$UNBOUND_CONF_DIR/unbound.conf
 echo -e "    directory: $UNBOUND_CONF_DIR" >> $CONF_FILE
+echo -e "    pidfile: $UNBOUND_CONF_DIR/unbound.pid" >> $CONF_FILE
 
 topic "Set up unbound-control"
 $BUILD_DIR/.apt/usr/sbin/unbound-control-setup -d $UNBOUND_CONF_DIR
