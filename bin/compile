@@ -30,20 +30,25 @@ topic "Confirming unbound is already installed"
 $BUILD_DIR/.apt/usr/sbin/unbound -V | indent
 
 topic "Creating unbound config"
-cp $CONF_DIR/unbound.conf $BUILD_DIR/.apt/etc/unbound/
+UNBOUND_CONF_DIR=$BUILD_DIR/.apt/etc/unbound
+cp $CONF_DIR/unbound.conf $UNBOUND_CONF_DIR/
+CONF_FILE=$UNBOUND_CONF_DIR/unbound.conf
 
 topic "Set up unbound-control"
-$BUILD_DIR/.apt/usr/sbin/unbound-control-setup -d $BUILD_DIR/.apt/etc/unbound
+$BUILD_DIR/.apt/usr/sbin/unbound-control-setup -d $UNBOUND_CONF_DIR
+echo -e "    control-enable: yes" >> $CONF_FILE
+echo -e "    control-key-file: $UNBOUND_CONF_DIR/unbound_control.key" >> $CONF_FILE
+echo -e "    control-cert-file: $UNBOUND_CONF_DIR/unbound_control.pem" >> $CONF_FILE
 
 # TODO RM: skip if UNBOUND_JSON_FILE is empty
 topic "Adding forward list from UNBOUND_JSON config variable"
 readarray -t forward_add_arg_list < <(jq -r '.forward[] | "\(.zone) \(.addrs | join (" "))"' $UNBOUND_JSON_FILE)
 for forward_add_args in "${forward_add_arg_list[@]}"; do
-    $BUILD_DIR/.apt/usr/sbin/unbound-control forward_add "$forward_add_args" -c $BUILD_DIR/.apt/etc/unbound/unbound.conf
+    $BUILD_DIR/.apt/usr/sbin/unbound-control forward_add "$forward_add_args" -c $CONF_FILE
 done
 
 topic "Confirm config file"
-cat $BUILD_DIR/.apt/etc/unbound/unbound.conf | indent
+cat $CONF_FILE | indent
 
 topic "Configuring unbound to run as daemon"
 mkdir -p $BUILD_DIR/.profile.d
