@@ -33,15 +33,12 @@ topic "Creating unbound config"
 UNBOUND_CONF_DIR=$BUILD_DIR/.apt/etc/unbound
 cp $CONF_DIR/unbound.conf $UNBOUND_CONF_DIR/
 CONF_FILE=$UNBOUND_CONF_DIR/unbound.conf
-echo -e "    directory: $UNBOUND_CONF_DIR" >> $CONF_FILE
-echo -e "    pidfile: $UNBOUND_CONF_DIR/unbound.pid" >> $CONF_FILE
+echo -e "    chroot: $BUILD_DIR/.apt" >> $CONF_FILE
 
 topic "Set up unbound-control"
 $BUILD_DIR/.apt/usr/sbin/unbound-control-setup -d $UNBOUND_CONF_DIR
 echo -e "remote-control:" >> $CONF_FILE
 echo -e "    control-enable: yes" >> $CONF_FILE
-echo -e "    control-key-file: $UNBOUND_CONF_DIR/unbound_control.key" >> $CONF_FILE
-echo -e "    control-cert-file: $UNBOUND_CONF_DIR/unbound_control.pem" >> $CONF_FILE
 cat $CONF_FILE | indent
 $BUILD_DIR/.apt/usr/sbin/unbound-checkconf $CONF_FILE | indent
 
