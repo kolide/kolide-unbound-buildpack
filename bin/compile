@@ -36,7 +36,7 @@ cp $CONF_DIR/unbound.conf $BUILD_DIR/.apt/etc/unbound/
 topic "Adding forward list from UNBOUND_JSON config variable"
 readarray -t forward_add_arg_list < <(jq -r '.forward[] | "\(.zone) \(.addrs | join (" "))"' $UNBOUND_JSON_FILE)
 for forward_add_args in "${forward_add_arg_list[@]}"; do
-    /usr/local/sbin/unbound-control forward_add "$forward_add_args"
+    $BUILD_DIR/.apt/usr/sbin/unbound-control forward_add "$forward_add_args"
 done
 
 topic "Configuring unbound to run as daemon"
