@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# This buildpack can be applied to any app
+echo "UnboundForAwsVpcPeeringConnection"
+exit 0
