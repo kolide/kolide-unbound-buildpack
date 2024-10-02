@@ -10,7 +10,7 @@ CACHE_DIR=$2
 ENV_DIR=$3
 BIN_DIR=$(dirname "$0")
 CONF_DIR=$(cd "$BIN_DIR"; cd ../conf; pwd)
-UNBOUND_JSON_FILE=$CONF_DIR/UNBOUND_JSON
+UNBOUND_JSON_FILE=$ENV_DIR/UNBOUND_JSON
 
 # Expected formatting for buildpack output
 function topic() {
