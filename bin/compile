@@ -37,17 +37,19 @@ echo -e "    chroot: $BUILD_DIR/.apt" >> $CONF_FILE
 
 topic "Set up unbound-control"
 $BUILD_DIR/.apt/usr/sbin/unbound-control-setup -d $UNBOUND_CONF_DIR
-# Create a temporary config copy where we set the port
-CONF_FILE_COPY=$UNBOUND_CONF_DIR/unbound.temp.conf
-cp $CONF_FILE $CONF_FILE_COPY
-echo -e "    port: 5000" >> $CONF_FILE_COPY # Set port to a high number so that unbound can run in this context
+echo -e "    port: 5000" >> $CONF_FILE # Set port to a high number so that unbound can run in this context
+echo -e "    use-syslog: no" >> $CONF_FILE
+LOGFILE=$UNBOUND_CONF_DIR/unbound.log
+touch $LOGFILE
+echo -e "    logfile: $LOGFILE" >> $CONF_FILE
 # Add in the remote-control option to both files
 echo -e "remote-control:" >> $CONF_FILE
-echo -e "remote-control:" >> $CONF_FILE_COPY
 echo -e "    control-enable: yes" >> $CONF_FILE
-echo -e "    control-enable: yes" >> $CONF_FILE_COPY
 cat $CONF_FILE | indent
-$BUILD_DIR/.apt/usr/sbin/unbound -c $CONF_FILE_COPY # Start unbound so that it will respond to unbound-control
+$BUILD_DIR/.apt/usr/sbin/unbound -vvv -c $CONF_FILE # Start unbound so that it will respond to unbound-control
+sleep 10
+ls -al $BUILD_DIR/.apt/etc/unbound
+cat $LOGFILE
 
 # TODO RM: skip if UNBOUND_JSON_FILE is empty
 topic "Adding forward list from UNBOUND_JSON config variable"
