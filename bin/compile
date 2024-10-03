@@ -55,6 +55,9 @@ done
 topic "Confirm config file"
 cat $CONF_FILE | indent
 
+echo $LD_LIBRARY_PATH
+find $BUILD_DIR/.apt -name libpython3.10.so.1.0
+
 topic "Configuring unbound to run as daemon"
 mkdir -p $BUILD_DIR/.profile.d
 cp "$BIN_DIR/unbound.sh" "$BUILD_DIR/.profile.d/"
