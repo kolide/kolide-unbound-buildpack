@@ -38,11 +38,6 @@ topic "Set chroot"
 echo -e "    chroot: $CHROOT" >> $CONF_FILE
 echo -e "    pidfile: $CHROOT/etc/unbound/unbound.pid" >> $CONF_FILE
 
-topic "Run unbound-control-setup to generate keys/certs"
-$BUILD_DIR/.apt/usr/sbin/unbound-control-setup -d $CHROOT/etc/unbound | indent
-echo -e "    server-key-file: $CHROOT/etc/unbound/unbound_server.key" >> $CONF_FILE
-echo -e "    server-cert-file: $CHROOT/etc/unbound/unbound_server.pem" >> $CONF_FILE
-
 topic "Adding forward list from UNBOUND_JSON config variable"
 for row in $(jq -c '.forward[]' $UNBOUND_JSON_FILE); do
     zone=$(echo ${row} | jq -r '.zone')
@@ -59,7 +54,6 @@ done
 
 topic "Confirm config file"
 cat $CONF_FILE | indent
-$BUILD_DIR/.apt/usr/sbin/unbound-checkconf $CONF_FILE | indent
 
 topic "Configuring unbound to run as daemon"
 mkdir -p $BUILD_DIR/.profile.d
