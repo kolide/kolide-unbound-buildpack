@@ -30,13 +30,15 @@ topic "Confirming unbound is already installed"
 $BUILD_DIR/.apt/usr/sbin/unbound -V | indent
 
 topic "Creating unbound config"
-UNBOUND_CONF_DIR=$BUILD_DIR/.apt/etc/unbound
-cp $CONF_DIR/unbound.conf $UNBOUND_CONF_DIR/
-CONF_FILE=$UNBOUND_CONF_DIR/unbound.conf
+CHROOT=$BUILD_DIR/.apt
+cp $CONF_DIR/unbound.conf $CHROOT/etc/unbound
+CONF_FILE=$CHROOT/etc/unbound/unbound.conf
 
-# TODO RM: skip if UNBOUND_JSON_FILE is empty
+topic "Set chroot"
+echo -e "    chroot: $CHROOT" >> $CONF_FILE
+echo -e "    pidfile: $CHROOT/etc/unbound/unbound.pid" >> $CONF_FILE
+
 topic "Adding forward list from UNBOUND_JSON config variable"
-
 for row in $(jq -c '.forward[]' $UNBOUND_JSON_FILE); do
     zone=$(echo ${row} | jq -r '.zone')
 
