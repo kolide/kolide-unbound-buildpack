@@ -12,9 +12,11 @@ for row in $(grep '^nameserver' /etc/resolv.conf | cut -d' ' -f2); do
 done
 echo -e "        forward-no-cache: yes" >> $CONF_FILE
 
-# Replace chroot and pidfile
+# Replace build directories with actual directories for chroot, pidfile, and server key/cert
 sed -i '/chroot:*/c\    chroot: /app/.apt' $CONF_FILE
 sed -i '/pidfile:*/c\    pidfile: /app/.apt/etc/unbound/unbound.pid' $CONF_FILE
+sed -i '/server-key-file:*/c\    server-key-file: /app/.apt/etc/unbound/unbound_server.key' $CONF_FILE
+sed -i '/server-cert-file:*/c\    server-cert-file: /app/.apt/etc/unbound/unbound_server.pem' $CONF_FILE
 
 # Update /etc/resolv.conf to use unbound instead of the Private Space DNS
 awk '!/nameserver/' /etc/resolv.conf > /etc/resolv.conf.new
