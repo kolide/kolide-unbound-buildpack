@@ -19,4 +19,4 @@ mv /etc/resolv.conf /etc/resolv.conf.bak
 mv /etc/resolv.conf.new /etc/resolv.conf
 
 # Start unbound
-/app/.apt/usr/sbin/unbound -c -vvv /app/.apt/etc/unbound/unbound.conf
+/app/.apt/usr/sbin/unbound -vvv -c /app/.apt/etc/unbound/unbound.conf
