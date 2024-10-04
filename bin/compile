@@ -38,6 +38,9 @@ topic "Set chroot"
 echo -e "    chroot: $CHROOT" >> $CONF_FILE
 echo -e "    pidfile: $CHROOT/etc/unbound/unbound.pid" >> $CONF_FILE
 
+topic "Disable IPv6 in unbound config to accommodate Heroku"
+echo -e "    do-ip6: no" >> $CONF_FILE
+
 topic "Adding forward list from UNBOUND_JSON config variable"
 for row in $(jq -c '.forward[]' $UNBOUND_JSON_FILE); do
     zone=$(echo ${row} | jq -r '.zone')
