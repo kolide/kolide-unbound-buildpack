@@ -12,9 +12,10 @@ for row in $(grep '^nameserver' /etc/resolv.conf | cut -d' ' -f2); do
 done
 echo -e "    forward-no-cache: yes" >> $CONF_FILE
 
-# Replace build directories with actual directories for chroot, pidfile, and server key/cert
+# Replace build directories with actual directories
 sed -i '/chroot:*/c\    chroot: /app/.apt' $CONF_FILE
 sed -i '/pidfile:*/c\    pidfile: /app/.apt/etc/unbound/unbound.pid' $CONF_FILE
+sed -i '/logfile:*/c\    logfile: /app/.apt/etc/unbound/unbound.log' $CONF_FILE
 sed -i '/server-key-file:*/c\    server-key-file: /app/.apt/etc/unbound/unbound_server.key' $CONF_FILE
 sed -i '/server-cert-file:*/c\    server-cert-file: /app/.apt/etc/unbound/unbound_server.pem' $CONF_FILE
 

@@ -37,10 +37,14 @@ CONF_FILE=$UNBOUND_WORKING_DIR/unbound.conf
 
 topic "Set chroot"
 echo -e "    chroot: $CHROOT" >> $CONF_FILE
-echo -e "    pidfile: $CHROOT/etc/unbound/unbound.pid" >> $CONF_FILE
+echo -e "    pidfile: $UNBOUND_WORKING_DIR/unbound.pid" >> $CONF_FILE
 
 topic "Disable IPv6 in unbound config to accommodate Heroku"
 echo -e "    do-ip6: no" >> $CONF_FILE
+
+topic "Set up logfile"
+echo -e "    use-syslog: no" >> $CONF_FILE
+echo -e "    logfile: $UNBOUND_WORKING_DIR/unbound.log" >> $CONF_FILE
 
 topic "Set up server keys"
 $CHROOT/usr/sbin/unbound-control-setup -d $UNBOUND_WORKING_DIR | indent
