@@ -5,12 +5,12 @@ PRIVATE_SPACE_DNS_SERVERS=$(grep '^nameserver' /etc/resolv.conf | cut -d' ' -f2)
 
 # Default to using these DNS servers in unbound
 CONF_FILE=/app/.apt/etc/unbound/unbound.conf
-echo -e "    forward-zone:" >> $CONF_FILE
-echo -e "        name: \"*\"" >> $CONF_FILE
+echo -e "forward-zone:" >> $CONF_FILE
+echo -e "    name: \"*\"" >> $CONF_FILE
 for row in $(grep '^nameserver' /etc/resolv.conf | cut -d' ' -f2); do
-    echo -e "        forward-addr: $row" >> $CONF_FILE
+    echo -e "    forward-addr: $row" >> $CONF_FILE
 done
-echo -e "        forward-no-cache: yes" >> $CONF_FILE
+echo -e "    forward-no-cache: yes" >> $CONF_FILE
 
 # Replace build directories with actual directories for chroot, pidfile, and server key/cert
 sed -i '/chroot:*/c\    chroot: /app/.apt' $CONF_FILE

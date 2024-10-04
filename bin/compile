@@ -44,22 +44,22 @@ echo -e "    do-ip6: no" >> $CONF_FILE
 
 topic "Set up server keys"
 $CHROOT/usr/sbin/unbound-control-setup -d $UNBOUND_WORKING_DIR | indent
-echo -e "    remote-control:" >> $CONF_FILE
-echo -e "        server-key-file: $UNBOUND_WORKING_DIR/unbound_server.key" >> $CONF_FILE
-echo -e "        server-cert-file: $UNBOUND_WORKING_DIR/unbound_server.pem" >> $CONF_FILE
+echo -e "remote-control:" >> $CONF_FILE
+echo -e "    server-key-file: $UNBOUND_WORKING_DIR/unbound_server.key" >> $CONF_FILE
+echo -e "    server-cert-file: $UNBOUND_WORKING_DIR/unbound_server.pem" >> $CONF_FILE
 
 topic "Adding forward list from UNBOUND_JSON config variable"
 for row in $(jq -c '.forward[]' $UNBOUND_JSON_FILE); do
     zone=$(echo ${row} | jq -r '.zone')
 
-    echo -e "    forward-zone:" >> $CONF_FILE
-    echo -e "        name: \"$zone\"" >> $CONF_FILE
+    echo -e "forward-zone:" >> $CONF_FILE
+    echo -e "    name: \"$zone\"" >> $CONF_FILE
 
     for addr in $(echo ${row} | jq -r '.addrs[]'); do
-        echo -e "        forward-addr: $addr" >> $CONF_FILE
+        echo -e "    forward-addr: $addr" >> $CONF_FILE
     done
 
-    echo -e "        forward-no-cache: yes" >> $CONF_FILE
+    echo -e "    forward-no-cache: yes" >> $CONF_FILE
 done
 
 topic "Confirm config file"
