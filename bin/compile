@@ -36,7 +36,6 @@ cp $CONF_DIR/unbound.conf $UNBOUND_WORKING_DIR/
 CONF_FILE=$UNBOUND_WORKING_DIR/unbound.conf
 
 topic "Set up directories and files"
-echo -e "    chroot: $CHROOT" >> $CONF_FILE
 echo -e "    pidfile: $UNBOUND_WORKING_DIR/unbound.pid" >> $CONF_FILE
 echo -e "    directory: $UNBOUND_WORKING_DIR" >> $CONF_FILE
 
@@ -64,7 +63,6 @@ for row in $(jq -c '.forward[]' $UNBOUND_JSON_FILE); do
 done
 
 topic "Replace build working directories with actual directories"
-sed -i '/chroot:*/c\    chroot: /app/.apt' $CONF_FILE
 sed -i '/pidfile:*/c\    pidfile: /app/.apt/etc/unbound/unbound.pid' $CONF_FILE
 sed -i '/server-key-file:*/c\    server-key-file: /app/.apt/etc/unbound/unbound_server.key' $CONF_FILE
 sed -i '/server-cert-file:*/c\    server-cert-file: /app/.apt/etc/unbound/unbound_server.pem' $CONF_FILE
