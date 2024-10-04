@@ -35,16 +35,15 @@ UNBOUND_WORKING_DIR=$CHROOT/etc/unbound
 cp $CONF_DIR/unbound.conf $UNBOUND_WORKING_DIR/
 CONF_FILE=$UNBOUND_WORKING_DIR/unbound.conf
 
-topic "Set chroot"
+topic "Set up directories and files"
 echo -e "    chroot: $CHROOT" >> $CONF_FILE
 echo -e "    pidfile: $UNBOUND_WORKING_DIR/unbound.pid" >> $CONF_FILE
+echo -e "    use-syslog: no" >> $CONF_FILE
+echo -e "    logfile: $UNBOUND_WORKING_DIR/unbound.log" >> $CONF_FILE
+echo -e "    directory: $UNBOUND_WORKING_DIR" >> $CONF_FILE
 
 topic "Disable IPv6 in unbound config to accommodate Heroku"
 echo -e "    do-ip6: no" >> $CONF_FILE
-
-topic "Set up logfile"
-echo -e "    use-syslog: no" >> $CONF_FILE
-echo -e "    logfile: $UNBOUND_WORKING_DIR/unbound.log" >> $CONF_FILE
 
 topic "Set up server keys"
 $CHROOT/usr/sbin/unbound-control-setup -d $UNBOUND_WORKING_DIR | indent
@@ -72,6 +71,7 @@ sed -i '/pidfile:*/c\    pidfile: /app/.apt/etc/unbound/unbound.pid' $CONF_FILE
 sed -i '/logfile:*/c\    logfile: /app/.apt/etc/unbound/unbound.log' $CONF_FILE
 sed -i '/server-key-file:*/c\    server-key-file: /app/.apt/etc/unbound/unbound_server.key' $CONF_FILE
 sed -i '/server-cert-file:*/c\    server-cert-file: /app/.apt/etc/unbound/unbound_server.pem' $CONF_FILE
+sed -i '/directory:*/c\    directory: /app/.apt/etc/unbound' $CONF_FILE
 
 topic "Confirm config file"
 cat $CONF_FILE | indent
