@@ -14,11 +14,9 @@ for row in $(grep '^nameserver' /etc/resolv.conf | cut -d' ' -f2); do
 done
 echo -e "    forward-no-cache: yes" >> $CONF_FILE
 
-# Update /etc/resolv.conf to use unbound instead of the Private Space DNS
-awk '!/nameserver/' /etc/resolv.conf > /etc/resolv.conf.new
-echo "nameserver 127.0.0.1" >> /etc/resolv.conf.new
-mv /etc/resolv.conf /etc/resolv.conf.bak
-mv /etc/resolv.conf.new /etc/resolv.conf
+# Create a new resolv file using unbound instead of the Private Space DNS
+awk '!/nameserver/' /etc/resolv.conf > /app/resolv.conf
+echo "nameserver 127.0.0.1" >> /app/resolv.conf
 
 # Start unbound
 /app/.apt/usr/sbin/unbound -vvv -c /app/.apt/etc/unbound/unbound.conf
