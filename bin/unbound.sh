@@ -8,7 +8,9 @@ CONF_FILE=/app/.apt/etc/unbound/unbound.conf
 echo -e "forward-zone:" >> $CONF_FILE
 echo -e "    name: \"*\"" >> $CONF_FILE
 for row in $(grep '^nameserver' /etc/resolv.conf | cut -d' ' -f2); do
-    echo -e "    forward-addr: $row" >> $CONF_FILE
+    if [ "$row" != "127.0.0.1" ]; then
+        echo -e "    forward-addr: $row" >> $CONF_FILE
+    fi
 done
 echo -e "    forward-no-cache: yes" >> $CONF_FILE
 
