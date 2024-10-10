@@ -5,12 +5,12 @@ set -o pipefail
 set -eu
 
 # Arguments
-BUILD_DIR=$1
-CACHE_DIR=$2
-ENV_DIR=$3
+BUILD_DIR="$1"
+CACHE_DIR="$2"
+ENV_DIR="$3"
 BIN_DIR=$(dirname "$0")
 CONF_DIR=$(cd "$BIN_DIR"; cd ../conf; pwd)
-UNBOUND_JSON_FILE=$ENV_DIR/UNBOUND_JSON
+UNBOUND_JSON_FILE="$ENV_DIR/UNBOUND_JSON"
 
 # Expected formatting for buildpack output
 function topic() {
@@ -30,10 +30,10 @@ topic "Confirming unbound is already installed"
 $BUILD_DIR/.apt/usr/sbin/unbound -V | indent
 
 topic "Creating unbound config"
-CHROOT=$BUILD_DIR/.apt
-UNBOUND_WORKING_DIR=$CHROOT/etc/unbound
+CHROOT="$BUILD_DIR/.apt"
+UNBOUND_WORKING_DIR="$CHROOT/etc/unbound"
 cp $CONF_DIR/unbound.conf $UNBOUND_WORKING_DIR/
-CONF_FILE=$UNBOUND_WORKING_DIR/unbound.conf
+CONF_FILE="$UNBOUND_WORKING_DIR/unbound.conf"
 
 topic "Set up directories and files"
 echo -e "    pidfile: $UNBOUND_WORKING_DIR/unbound.pid" >> $CONF_FILE
