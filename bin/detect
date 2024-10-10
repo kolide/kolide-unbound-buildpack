@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
-# This buildpack can be applied to any app
-echo "UnboundForAwsVpcPeeringConnection"
-exit 0
+# This buildpack can be applied to any app with unbound already installed
+if [ -f $1/.apt/usr/sbin/unbound ]; then
+    echo "UnboundForAwsVpcPeeringConnection"
+    exit 0
+else
+    exit 1
+fi
