@@ -30,8 +30,8 @@ topic "Confirming unbound is already installed"
 $BUILD_DIR/.apt/usr/sbin/unbound -V | indent
 
 topic "Creating unbound config"
-CHROOT="$BUILD_DIR/.apt"
-UNBOUND_WORKING_DIR="$CHROOT/etc/unbound"
+UNBOUND_CHROOT="$BUILD_DIR/.apt"
+UNBOUND_WORKING_DIR="$UNBOUND_CHROOT/etc/unbound"
 cp $CONF_DIR/unbound.conf $UNBOUND_WORKING_DIR/
 CONF_FILE="$UNBOUND_WORKING_DIR/unbound.conf"
 
@@ -43,7 +43,7 @@ topic "Disable IPv6 in unbound config to accommodate Heroku"
 echo -e "    do-ip6: no" >> $CONF_FILE
 
 topic "Set up server keys"
-$CHROOT/usr/sbin/unbound-control-setup -d $UNBOUND_WORKING_DIR | indent
+$UNBOUND_CHROOT/usr/sbin/unbound-control-setup -d $UNBOUND_WORKING_DIR | indent
 echo -e "remote-control:" >> $CONF_FILE
 echo -e "    server-key-file: $UNBOUND_WORKING_DIR/unbound_server.key" >> $CONF_FILE
 echo -e "    server-cert-file: $UNBOUND_WORKING_DIR/unbound_server.pem" >> $CONF_FILE
