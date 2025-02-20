@@ -29,6 +29,6 @@ For your Heroku app to use unbound, you must enable setting an extra DNS resolve
 This can be done by e.g. running:
 
 ```
-heroku labs:enable spaces-extra-resolver -a [HEROKU APP NAME]
+heroku labs:enable spaces-extra-resolver -a [APP NAME]
 heroku config:set HEROKU_EXTRA_RESOLVER=127.0.0.1 -a [APP NAME]`
 ```
